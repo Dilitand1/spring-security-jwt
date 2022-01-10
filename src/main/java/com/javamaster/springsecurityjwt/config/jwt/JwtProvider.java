@@ -18,10 +18,11 @@ public class JwtProvider {
     @Value("$(jwt.secret)")
     private String jwtSecret;
 
-    public String generateToken(String login) {
-        Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    public String generateToken(String login, String role) {
+        Date date = new Date(new Date().getTime() + 1000000);
         return Jwts.builder()
                 .setSubject(login)
+                .claim("role", role)
                 .setExpiration(date)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();

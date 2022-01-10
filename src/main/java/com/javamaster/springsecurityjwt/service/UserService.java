@@ -13,14 +13,16 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    private List<FakeUserEntity> users;
+
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        users = List.of(
+                new FakeUserEntity("user",passwordEncoder.encode("password"), FakeRole.ROLE_USER)
+                ,new FakeUserEntity("admin",passwordEncoder.encode("password"), FakeRole.ROLE_ADMIN));
     }
 
-    List<FakeUserEntity> users = List.of(
-            new FakeUserEntity("user",passwordEncoder.encode("password"), FakeRole.ROLE_USER)
-            ,new FakeUserEntity("admin",passwordEncoder.encode("password"), FakeRole.ROLE_ADMIN));
+
 
     public FakeUserEntity saveUser(FakeUserEntity userEntity) {
         users.add(userEntity);

@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest request) {
         FakeUserEntity userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        String token = jwtProvider.generateToken(userEntity.getLogin());
+        String token = jwtProvider.generateToken(userEntity.getLogin(), userEntity.getRole().name());
         return new AuthResponse(token);
     }
 }
