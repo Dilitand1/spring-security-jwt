@@ -1,36 +1,38 @@
 package com.javamaster.springsecurityjwt.service;
 
-import com.javamaster.springsecurityjwt.entity.RoleEntity;
-import com.javamaster.springsecurityjwt.entity.UserEntity;
-import com.javamaster.springsecurityjwt.repository.RoleEntityRepository;
-import com.javamaster.springsecurityjwt.repository.UserEntityRepository;
+import com.javamaster.springsecurityjwt.entity.FakeRole;
+import com.javamaster.springsecurityjwt.entity.FakeUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
-    @Autowired
-    private UserEntityRepository userEntityRepository;
-    @Autowired
-    private RoleEntityRepository roleEntityRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserEntity saveUser(UserEntity userEntity) {
-        RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
-        userEntity.setRoleEntity(userRole);
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        return userEntityRepository.save(userEntity);
+    @Autowired
+    public UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity findByLogin(String login) {
-        return userEntityRepository.findByLogin(login);
+    List<FakeUserEntity> users = List.of(
+            new FakeUserEntity("user",passwordEncoder.encode("password"), FakeRole.ROLE_USER)
+            ,new FakeUserEntity("admin",passwordEncoder.encode("password"), FakeRole.ROLE_ADMIN));
+
+    public FakeUserEntity saveUser(FakeUserEntity userEntity) {
+        users.add(userEntity);
+        return userEntity;
     }
 
-    public UserEntity findByLoginAndPassword(String login, String password) {
-        UserEntity userEntity = findByLogin(login);
+    public FakeUserEntity findByLogin(String login) {
+        return users.stream().filter(user -> login.equalsIgnoreCase(user.getLogin())).findFirst().orElseThrow(()-> new IllegalArgumentException());
+    }
+
+    public FakeUserEntity findByLoginAndPassword(String login, String password) {
+        FakeUserEntity userEntity = findByLogin(login);
         if (userEntity != null) {
             if (passwordEncoder.matches(password, userEntity.getPassword())) {
                 return userEntity;

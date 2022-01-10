@@ -2,6 +2,7 @@ package com.javamaster.springsecurityjwt.config.jwt;
 
 import com.javamaster.springsecurityjwt.config.CustomUserDetails;
 import com.javamaster.springsecurityjwt.config.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

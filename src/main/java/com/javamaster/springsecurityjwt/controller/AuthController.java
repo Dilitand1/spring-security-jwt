@@ -1,7 +1,7 @@
 package com.javamaster.springsecurityjwt.controller;
 
 import com.javamaster.springsecurityjwt.config.jwt.JwtProvider;
-import com.javamaster.springsecurityjwt.entity.UserEntity;
+import com.javamaster.springsecurityjwt.entity.FakeUserEntity;
 import com.javamaster.springsecurityjwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
-        UserEntity u = new UserEntity();
+        FakeUserEntity u = new FakeUserEntity();
         u.setPassword(registrationRequest.getPassword());
         u.setLogin(registrationRequest.getLogin());
         userService.saveUser(u);
@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest request) {
-        UserEntity userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
+        FakeUserEntity userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         String token = jwtProvider.generateToken(userEntity.getLogin());
         return new AuthResponse(token);
     }
